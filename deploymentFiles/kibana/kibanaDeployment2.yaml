@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana-deployment
+  namespace: kibana-ns
+spec:
+  selector:
+    matchLabels:
+      # run: kibana
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+        # run: kibana
+    spec:
+      containers:
+        - name: kibana-container
+          image: docker.elastic.co/kibana/kibana:6.2.1
+          env:
+            - name: ELASTICSEARCH_URL
+              value: "http://elasticsearch-logging-service.elastic-ns:9200"
+              # value: http://192.168.49.2:31000
+            #- name: XPACK_SECURITY_ENABLED
+            #  value: true
+          ports:
+            - containerPort: 5601
+              name: http
+              protocol: TCP
