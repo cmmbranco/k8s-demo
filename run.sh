@@ -26,6 +26,26 @@ then
 fi
 
 
+if [ $1 == 'flask' ]
+then
+
+    eval $(minikube docker-env)
+
+    ## Create namespaces
+    minikube kubectl -- apply -f deploymentFiles/namespaces/hellopyNamespace.yaml
+
+    ## build images to registry
+    cd apps/pythonApp/
+    docker build -f dockerPythonServer.docker -t hello-python:latest .
+    cd ../../
+
+    ## deploy applications from registry and other sources
+    minikube kubectl -- apply -f deploymentFiles/pythonServer/hellopyDeployment.yaml
+    minikube kubectl -- apply -f deploymentFiles/pythonServer/hellopyService.yaml
+
+
+fi
+
 ## Setup the applications
 if [ $1 == 'setup' ]
 then
